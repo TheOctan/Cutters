@@ -24,6 +24,9 @@ public class MovementController : MonoBehaviour
     private Vector3 _rawMovementDirection;
     private Vector3 _movementDirection;
     private Vector3 _rotationDirection;
+    private Vector3 _velocity;
+
+    public float CurrentSpeed => _velocity.magnitude;
 
     public void SetDirection(Vector3 direction)
     {
@@ -65,7 +68,8 @@ public class MovementController : MonoBehaviour
     {
         float tangentSpeed = _acceleration * Time.fixedDeltaTime;
         _movementDirection = AccelerateDirection(_movementDirection, _rawMovementDirection, tangentSpeed);
-        Vector3 movement = _movementDirection * _movementSpeed * Time.fixedDeltaTime;
+        _velocity = _movementDirection * _movementSpeed;
+        Vector3 movement = _velocity * Time.fixedDeltaTime;
 
         _rigidbodyComponent.MovePosition(_rigidbodyComponent.position + movement);
     }
