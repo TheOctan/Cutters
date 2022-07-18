@@ -89,4 +89,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MovementRange: 100
-  m_ControlPath: 
+  m_ControlPath: <Gamepad>/leftStick
