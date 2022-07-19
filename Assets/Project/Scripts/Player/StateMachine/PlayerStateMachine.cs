@@ -28,8 +28,6 @@ namespace Project.Scripts.Player.StateMachine
 
             _currentState = newState;
             _currentStateType = state;
-
-            Debug.Log(_currentStateType);
         }
 
         public void Update()
