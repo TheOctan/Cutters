@@ -1,130 +1,105 @@
 ﻿using UnityEngine;
 
-namespace BrokenVector.LowPolyFencePack
+[RequireComponent(typeof(Animation))]
+public class DoorController : MonoBehaviour
 {
-    /// <summary>
-    /// This class manages the door animations.
-    /// It needs the legacy animation component.
-    /// </summary>
-    [RequireComponent(typeof(Animation))]
-    public class DoorController : MonoBehaviour
+    private enum DoorState
     {
+        Open,
+        Closed
+    }
 
-        /// <summary>
-        /// door state: Open or Closed
-        /// </summary>
-        public enum DoorState
+    [SerializeField] private DoorState _initialState = DoorState.Closed;
+    [SerializeField] private Collider _doorCollider;
+
+    [Header("Animation")]
+    [SerializeField] private float _animationSpeed = 1;
+    [SerializeField] private AnimationClip _openAnimation;
+    [SerializeField] private AnimationClip _closeAnimation;
+
+    private Animation _animator;
+    private DoorState _currentState;
+
+    private DoorState CurrentState {
+        get => _currentState;
+        set
         {
-            Open,
-            Closed
+            _currentState = value;
+            Animate();
         }
+    }
 
-        /// <summary></summary>
-        /// <returns>
-        /// returns and sets the current door state
-        /// </returns>
-        public DoorState CurrentState {
-            get
-            {
-                return currentState;
-            }
-            set
-            {
-                currentState = value;
-                Animate();
-            }
-        }
-        /// <returns>
-        /// returns wether the door is currently open or closed
-        /// </returns>
-        public bool IsDoorOpen { get { return CurrentState == DoorState.Open; } }
-        /// <returns>
-        /// returns wether the door is currently open or closed
-        /// </returns>
-        public bool IsDoorClosed { get { return CurrentState == DoorState.Closed; } }
+    private bool IsDoorOpen => CurrentState == DoorState.Open;
+    private bool IsDoorClosed => CurrentState == DoorState.Closed;
 
-        public DoorState InitialState = DoorState.Closed;
-        public float AnimationSpeed = 1;
-
-        [SerializeField]
-        private AnimationClip openAnimation;
-        [SerializeField]
-        private AnimationClip closeAnimation;
-
-        private Animation animator;
-        private DoorState currentState;
-
-        void Awake()
+    private void Awake()
+    {
+        _animator = GetComponent<Animation>();
+        if (_animator == null)
         {
-            animator = GetComponent<Animation>();
-            if (animator == null)
-            {
-                Debug.LogError("Every DoorController needs an Animator.");
-                return;
-            }
-            
-            // animator settings
-            animator.playAutomatically = false;
-
-            // prepare animation clips
-            openAnimation.legacy = true;
-            closeAnimation.legacy = true;
-            animator.AddClip(openAnimation, DoorState.Open.ToString());
-            animator.AddClip(closeAnimation, DoorState.Closed.ToString());
+            Debug.LogError("Every DoorController needs an Animator.");
+            return;
         }
 
-        void Start()
-        {            
-            // a little hack, to set the initial state
-            currentState = InitialState;
-            var clip = GetCurrentAnimation();
-            animator[clip].speed = 9999;
-            animator.Play(clip);
-        }
+        _animator.playAutomatically = false;
 
-        /// <summary>
-        /// Closes the door.
-        /// </summary>
-        public void CloseDoor()
+        _openAnimation.legacy = true;
+        _closeAnimation.legacy = true;
+        _animator.AddClip(_openAnimation, DoorState.Open.ToString());
+        _animator.AddClip(_closeAnimation, DoorState.Closed.ToString());
+    }
+
+    private void Start()
+    {            
+        _currentState = _initialState;
+        string clip = GetCurrentAnimation();
+        _animator[clip].speed = 9999;
+        _animator.Play(clip);
+    }
+
+    private void CloseDoor()
+    {
+        if (IsDoorClosed)
         {
-            if (IsDoorClosed)
-                return;
-
-            CurrentState = DoorState.Closed;
+            return;
         }
 
-        /// <summary>
-        /// Opens the door.
-        /// </summary>
-        public void OpenDoor()
+        CurrentState = DoorState.Closed;
+        _doorCollider.enabled = true;
+    }
+
+    private void OpenDoor()
+    {
+        if (IsDoorOpen)
         {
-            if (IsDoorOpen)
-                return;
-
-            CurrentState = DoorState.Open;
+            return;
         }
 
-        /// <summary>
-        /// Changes the current door state.
-        /// </summary>
-        public void ToggleDoor()
+        CurrentState = DoorState.Open;
+        _doorCollider.enabled = false;
+    }
+
+    public void ToggleDoor()
+    {
+        if (IsDoorOpen)
         {
-            if (IsDoorOpen)
-                CloseDoor();
-            else
-                OpenDoor();
+            CloseDoor();
         }
-
-        private void Animate()
+        else
         {
-            var clip = GetCurrentAnimation();
-            animator[clip].speed = AnimationSpeed;
-            animator.Play(clip);
+            OpenDoor();
         }
+    }
 
-        private string GetCurrentAnimation()
-        {
-            return CurrentState.ToString();
-        }
+    private void Animate()
+    {
+        string clip = GetCurrentAnimation();
+        _animator[clip].speed = _animationSpeed;
+        _animator.Play(clip);
+    }
+
+    private string GetCurrentAnimation()
+    {
+        return CurrentState.ToString();
     }
 }

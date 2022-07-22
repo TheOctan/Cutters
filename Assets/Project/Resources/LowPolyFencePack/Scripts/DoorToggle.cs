@@ -1,27 +1,28 @@
 ﻿using UnityEngine;
 
-namespace BrokenVector.LowPolyFencePack
+[RequireComponent(typeof(DoorController))]
+public class DoorToggle : MonoBehaviour
 {
-    /// <summary>
-    /// This class toggles the door animation.
-    /// The gameobject of this script has to have the DoorController script which needs an Animator component
-    /// and some kind of Collider which detects your mouse click applied.
-    /// </summary>
-    [RequireComponent(typeof(DoorController))]
-	public class DoorToggle : MonoBehaviour
+    private DoorController _doorController;
+
+    private void Awake()
     {
+        _doorController = GetComponent<DoorController>();
+    }
 
-        private DoorController doorController;
-
-        void Awake()
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out PlayerController _))
         {
-            doorController = GetComponent<DoorController>();
+            _doorController.ToggleDoor();
         }
+    }
 
-	    void OnMouseDown()
-	    {
-	        doorController.ToggleDoor();
-	    }
-
-	}
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.TryGetComponent(out PlayerController _))
+        {
+            _doorController.ToggleDoor();
+        }
+    }
 }
