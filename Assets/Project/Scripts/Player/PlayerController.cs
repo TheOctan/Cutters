@@ -92,7 +92,6 @@ public class PlayerController : MonoBehaviour
     private void OnTouchPressed(InputAction.CallbackContext context)
     {
         var touchPosition = _inputMaster.Player.TouchPosition.ReadValue<Vector2>();
-        Debug.Log(touchPosition);
 
         if (touchPosition.x < Screen.width / 2f)
         {
