@@ -21,7 +21,6 @@
 
             if (MovementContext.IsAttack)
             {
-                
                 SwitchState(PlayerState.Attack);
             }
             else if (!MovementContext.IsMoved)
