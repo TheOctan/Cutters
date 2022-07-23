@@ -1,6 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-[RequireComponent(typeof(Animation))]
 public class DoorController : MonoBehaviour
 {
     private enum DoorState
@@ -11,15 +10,15 @@ public class DoorController : MonoBehaviour
 
     [SerializeField] private DoorState _initialState = DoorState.Closed;
     [SerializeField] private Collider _doorCollider;
-
+    
     [Header("Animation")]
     [SerializeField] private float _animationSpeed = 1;
     [SerializeField] private AnimationClip _openAnimation;
     [SerializeField] private AnimationClip _closeAnimation;
-
+    
     private Animation _animator;
     private DoorState _currentState;
-
+    
     private DoorState CurrentState {
         get => _currentState;
         set
@@ -28,7 +27,7 @@ public class DoorController : MonoBehaviour
             Animate();
         }
     }
-
+    
     private bool IsDoorOpen => CurrentState == DoorState.Open;
     private bool IsDoorClosed => CurrentState == DoorState.Closed;
 
@@ -40,9 +39,9 @@ public class DoorController : MonoBehaviour
             Debug.LogError("Every DoorController needs an Animator.");
             return;
         }
-
+        
         _animator.playAutomatically = false;
-
+        
         _openAnimation.legacy = true;
         _closeAnimation.legacy = true;
         _animator.AddClip(_openAnimation, DoorState.Open.ToString());
@@ -50,7 +49,7 @@ public class DoorController : MonoBehaviour
     }
 
     private void Start()
-    {            
+    {
         _currentState = _initialState;
         string clip = GetCurrentAnimation();
         _animator[clip].speed = 9999;
@@ -63,18 +62,18 @@ public class DoorController : MonoBehaviour
         {
             return;
         }
-
+    
         CurrentState = DoorState.Closed;
         _doorCollider.enabled = true;
     }
-
+    
     private void OpenDoor()
     {
         if (IsDoorOpen)
         {
             return;
         }
-
+    
         CurrentState = DoorState.Open;
         _doorCollider.enabled = false;
     }
@@ -90,7 +89,7 @@ public class DoorController : MonoBehaviour
             OpenDoor();
         }
     }
-
+    
     private void Animate()
     {
         string clip = GetCurrentAnimation();
