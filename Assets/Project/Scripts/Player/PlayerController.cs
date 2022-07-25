@@ -4,6 +4,7 @@ using Project.Scripts.Player;
 using Project.Scripts.Player.StateMachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [AddComponentMenu("Player/Player Controller")]
@@ -11,9 +12,12 @@ public class PlayerController : MonoBehaviour
 {
     public event Action OnAttack;
 
+    [Header("Movement")]
     [SerializeField] private MovementController _movementController;
-    [SerializeField] private Animator _animator;
     [SerializeField] private Image _joystick;
+    [Header("Animation")]
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _animatedTool;
 
     private InputMaster _inputMaster;
     private PlayerStateMachine _playerStateMachine;
@@ -24,7 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         _inputMaster = new InputMaster();
         _playerMovementContext = new PlayerMovementContext(_movementController);
-        _playerAnimationContext = new PlayerAnimationContext(_animator);
+        _playerAnimationContext = new PlayerAnimationContext(_animator, _animatedTool);
 
         _playerStateMachine = new PlayerStateMachine(_playerMovementContext, _playerAnimationContext);
         _playerStateMachine.SwitchState(PlayerState.Idle);

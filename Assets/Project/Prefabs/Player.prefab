@@ -1338,8 +1338,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementController: {fileID: 8286889918219192863}
-  _animator: {fileID: 2152566678388173790}
   _joystick: {fileID: 0}
+  _animator: {fileID: 2152566678388173790}
+  _animatedTool: {fileID: 8076422830176639690}
 --- !u!114 &8286889918219192863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1353,7 +1354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbodyComponent: {fileID: 3391789127894299269}
-  _movementSpeed: 2
+  _movementSpeed: 4
   _acceleration: 12
   _turnSpeed: 12
   _velocityDependent: 1
@@ -2483,6 +2484,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Scythe
+      objectReference: {fileID: 0}
+    - target: {fileID: 5123763656955240964, guid: 6d5c973482b67d04e8b5574a2dc815a5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5499057094133807294, guid: 6d5c973482b67d04e8b5574a2dc815a5,
         type: 3}
