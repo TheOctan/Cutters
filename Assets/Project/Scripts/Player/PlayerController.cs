@@ -4,11 +4,10 @@ using Project.Scripts.Player;
 using Project.Scripts.Player.StateMachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [AddComponentMenu("Player/Player Controller")]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPlayerController
 {
     public event Action OnAttack;
 
