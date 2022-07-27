@@ -24,7 +24,7 @@ namespace Project.Scripts.Player.StateMachine.States
             if (AnimationContext.IsAnimationAttack && AnimationContext.IsAttack)
             {
                 AnimationContext.IsAttack = false;
-                ExitFromStateByDelayAsync(AnimationContext.CurrentAnimationLenght - 0.3f);
+                ExitFromStateByDelayAsync(AnimationContext.CurrentAnimationLenght - 0.15f);
             }
         }
 
