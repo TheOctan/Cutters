@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: PricePolicy
   m_EditorClassIdentifier: 
   _pricePerItem: 15
+  _moneyPrefab: {fileID: 544594189359745415, guid: a73f98e3b2a64fb4b8668c25fb314580,
+    type: 3}

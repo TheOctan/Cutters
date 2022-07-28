@@ -3,13 +3,20 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using Project.Scripts.Shop;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Shop : MonoBehaviour
 {
-    [SerializeField] private Transform _shopTransform;
     [SerializeField] private PricePolicy _pricePolicy;
+    [Header("Properties")]
+    [SerializeField] private Transform _shopTransform;
     [SerializeField] private float _delayShopping = 0.3f;
+
+    private ObjectPool<Coin> _coins;
+
+    private void Awake()
+    {
+        _coins = new ObjectPool<Coin>(_pricePolicy.MoneyPrefab, 15);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,8 +37,9 @@ public class Shop : MonoBehaviour
         while (!inventory.IsEmpty)
         {
             Transform item = inventory.GetNextItem();
-            item.DOJump(_shopTransform.position, 3, 1, 0.7f)
-                .SetEase(Ease.InOutSine);
+            item.DOJump(_shopTransform.position, 1.5f, 1, 0.7f)
+                .SetEase(Ease.InOutSine)
+                .OnComplete(() => Destroy(item.gameObject));
             await Task.Delay((int)(1000f * _delayShopping));
         }
     }
