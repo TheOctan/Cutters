@@ -15,6 +15,8 @@ namespace Project.Scripts.Player
         private readonly int _isAttackHash;
         private readonly int _walkingSpeedHash;
 
+        public Transform AnimatedTool { get; }
+
         public bool IsAnimationAttack => 
             _animator.GetCurrentAnimatorStateInfo(0).IsName(ATTACK_ANIMATION_NAME);
         public float CurrentAnimationLenght => _animator.GetCurrentAnimatorStateInfo(0).length; 
@@ -37,9 +39,10 @@ namespace Project.Scripts.Player
             set => _animator.SetFloat(_walkingSpeedHash, value);
         }
 
-        public PlayerAnimationContext(Animator animator)
+        public PlayerAnimationContext(Animator animator, Transform animatedTool)
         {
             _animator = animator;
+            AnimatedTool = animatedTool;
 
             _isWalkHash = Animator.StringToHash(IS_WALK_ANIMATION_KEY);
             _isAttackHash = Animator.StringToHash(IS_ATTACK_ANIMATION_KEY);

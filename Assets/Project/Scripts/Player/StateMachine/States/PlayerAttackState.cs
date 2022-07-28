@@ -16,6 +16,7 @@ namespace Project.Scripts.Player.StateMachine.States
         public override void EnterState()
         {
             AnimationContext.IsAttack = true;
+            AnimationContext.AnimatedTool.gameObject.SetActive(true);
         }
 
         public override void UpdateState()
@@ -23,12 +24,13 @@ namespace Project.Scripts.Player.StateMachine.States
             if (AnimationContext.IsAnimationAttack && AnimationContext.IsAttack)
             {
                 AnimationContext.IsAttack = false;
-                ExitFromStateByDelayAsync(AnimationContext.CurrentAnimationLenght - 0.3f);
+                ExitFromStateByDelayAsync(AnimationContext.CurrentAnimationLenght - 0.15f);
             }
         }
 
         public override void ExitState()
         {
+            AnimationContext.AnimatedTool.gameObject.SetActive(false);
         }
 
         private async void ExitFromStateByDelayAsync(float delay)
