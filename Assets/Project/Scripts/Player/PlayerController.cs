@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+[SelectionBase]
 [AddComponentMenu("Player/Player Controller")]
 public class PlayerController : MonoBehaviour, IPlayerController
 {
