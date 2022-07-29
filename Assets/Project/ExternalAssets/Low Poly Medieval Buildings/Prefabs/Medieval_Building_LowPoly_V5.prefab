@@ -143,7 +143,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pricePolicy: {fileID: 11400000, guid: 1eb9600e667e4904984cffbf7b6af015, type: 2}
   _shopTransform: {fileID: 8115811578567868011}
+  _uiCoinPosition: {fileID: 0}
   _delayShopping: 0.1
+  _delayCoinDropping: 0.1
+  _duration: 0.5
+  _distance: 7
 --- !u!65 &1023601873
 BoxCollider:
   m_ObjectHideFlags: 0

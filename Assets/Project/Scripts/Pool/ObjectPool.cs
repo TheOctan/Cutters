@@ -9,7 +9,7 @@ public class ObjectPool<T> : IPool<T> where T : MonoBehaviour, IPoolable<T>
     private readonly Action<T> _pushObject;
     private readonly T _prefab;
 
-    private readonly Stack<T> _polledObjects = new Stack<T>();
+    private readonly Queue<T> _polledObjects = new Queue<T>();
 
     public int Count => _polledObjects.Count;
 
@@ -32,14 +32,14 @@ public class ObjectPool<T> : IPool<T> where T : MonoBehaviour, IPoolable<T>
         {
             T obj = Object.Instantiate(_prefab);
             obj.gameObject.SetActive(false);
-            _polledObjects.Push(obj);
+            _polledObjects.Enqueue(obj);
         }
     }
 
     public T Pull()
     {
         T obj = Count > 0
-            ? _polledObjects.Pop()
+            ? _polledObjects.Dequeue()
             : Object.Instantiate(_prefab);
 
         obj.gameObject.SetActive(true);
@@ -85,7 +85,7 @@ public class ObjectPool<T> : IPool<T> where T : MonoBehaviour, IPoolable<T>
 
     public void Push(T obj)
     {
-        _polledObjects.Push(obj);
+        _polledObjects.Enqueue(obj);
 
         _pushObject?.Invoke(obj);
         obj.gameObject.SetActive(false);

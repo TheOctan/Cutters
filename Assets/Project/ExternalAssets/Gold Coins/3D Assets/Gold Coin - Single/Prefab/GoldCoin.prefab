@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4244701375105762}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: GoldCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 4271735776560842}
   - component: {fileID: 33160559832521050}
   - component: {fileID: 23941041030839374}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: GoldCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
