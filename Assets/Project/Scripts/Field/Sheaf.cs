@@ -1,4 +1,3 @@
-using DG.Tweening;
 using EzySlice;
 using UnityEngine;
 
@@ -14,23 +13,29 @@ public class Sheaf : MonoBehaviour, IDestroyable
         _material = _renderer.material;
     }
 
+    public void Grow()
+    {
+        
+    }
+
     public void Destroy()
     {
+        // TODO: confuse with global positions
+        GameObject[] gameObjects = Slice(GetSlicePosition(), Vector3.up);
+
+        gameObjects[1].transform.parent = transform.parent;
+        CreateStackableSheaf(gameObjects[0]);
+
         _collider.enabled = false;
-        GameObject[] objects = Slice(GetSlicePosition(), Vector3.up);
-
-        objects[1].transform.parent = transform.parent;
-        GameObject obj = objects[0];
-        var collider1 = obj.AddComponent<BoxCollider>();
-        collider1.enabled = false;
-        obj.layer = LayerMask.NameToLayer("Field");
-        obj.transform.DOJump(obj.transform.position, 2f, 1, 0.75f).SetEase(Ease.InOutSine);
-        obj.transform.DOScale(Vector3.one * 0.3f, 0.75f)
-            .SetEase(Ease.InOutSine)
-            .OnComplete(() => collider1.enabled = true);
-        obj.AddComponent<StackableSheaf>();
-
         gameObject.SetActive(false);
+    }
+
+    private static void CreateStackableSheaf(GameObject gameObject)
+    {
+        gameObject.layer = LayerMask.NameToLayer("Field");
+        gameObject.AddComponent<BoxCollider>().enabled = false;
+        var stackableSheaf = gameObject.AddComponent<StackableSheaf>();
+        stackableSheaf.Animate();
     }
 
     private GameObject[] Slice(Vector3 planeWorldPosition, Vector3 planeWorldDirection)
