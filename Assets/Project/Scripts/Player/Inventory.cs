@@ -47,6 +47,7 @@ public class Inventory : MonoBehaviour, IInventory
 
     private void UpdateCapacityText()
     {
+        _capacityText.transform.DOShakeScale(0.3f, 0.3f);
         _capacityText.text = $"{CountItems} / {_capacity}";
     }
 

@@ -31,6 +31,7 @@ public class ObjectPool<T> : IPool<T> where T : MonoBehaviour, IPoolable<T>
         for (var i = 0; i < preSpawnCount; i++)
         {
             T obj = Object.Instantiate(_prefab);
+            obj.name = $"{_prefab.name}_{i}";
             obj.gameObject.SetActive(false);
             _polledObjects.Enqueue(obj);
         }

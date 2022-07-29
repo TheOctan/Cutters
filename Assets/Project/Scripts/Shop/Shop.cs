@@ -11,16 +11,18 @@ public class Shop : MonoBehaviour
     [SerializeField] private Transform _shopTransform;
     [SerializeField] private RectTransform _uiCoinPosition;
 
+    [SerializeField] private CoinCounter _coinCounter;
+
     [Header("Coin")]
     [SerializeField, Min(0.1f)] private float _duration = 0.5f;
     [SerializeField] private float _distance = 5f;
 
-    private ObjectPool<Coin> _coins;
+    // private ObjectPool<Coin> _coins;
     private Camera _camera;
 
     private void Awake()
     {
-        _coins = new ObjectPool<Coin>(_pricePolicy.MoneyPrefab, 20);
+        // _coins = new ObjectPool<Coin>(_pricePolicy.MoneyPrefab, 20);
         _camera = Camera.main;
     }
 
@@ -35,14 +37,9 @@ public class Shop : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var inventory = other.GetComponentInChildren<IInventory>();
-        if (inventory != null)
+        if (inventory != null && !inventory.IsEmpty)
         {
-            if (!inventory.IsEmpty)
-            {
-                int totalPrice = inventory.CountItems * +_pricePolicy.PricePerItem;
-
-                AnimateItemsAsync(inventory);
-            }
+            AnimateItemsAsync(inventory);
         }
     }
 
@@ -67,16 +64,21 @@ public class Shop : MonoBehaviour
         await Task.Delay((int)(1000 * _pricePolicy.DelayCoinDropping));
 
         Quaternion rotation = _camera.transform.rotation * Quaternion.Euler(90, 0,0);
-        Coin coin = _coins.Pull(_shopTransform.position, rotation);
-        Vector3 corrected = _uiCoinPosition.position;
-        corrected.z = _distance;
+        Vector3 position = _shopTransform.position;
+
+        Coin coin = Instantiate(_pricePolicy.MoneyPrefab, position, rotation); //_coins.Pull(_shopTransform.position, rotation);
+        // Debug.Log(coin.name);
+
+        Vector3 corrected = _uiCoinPosition.position + Vector3.forward * _distance;
         Vector3 endPosition = _camera.ScreenToWorldPoint(corrected);
 
         coin.transform.DOMove(endPosition, _duration)
             .SetEase(Ease.InSine)
             .OnComplete(() =>
             {
-                coin.ReturnToPool();
+                Destroy(coin.gameObject);
+                _coinCounter.AddCoins(_pricePolicy.PricePerItem);
+                //coin.ReturnToPool();
             });
     }
 }
