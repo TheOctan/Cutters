@@ -28,7 +28,7 @@ public class FieldGenerator : MonoBehaviour
     private readonly List<Sheaf> _sheaves = new List<Sheaf>();
 
     public int CountSheaves => _sheaves.Count;
-    public int GrowedSheaves => _sheaves.Count(s => !s.IsDestroyed);
+    public int CountGrownSheaves => _sheaves.Count(s => !s.IsDestroyed);
     private Vector2Int MapCenter => new Vector2Int(_mapSize.x / 2, _mapSize.y / 2);
 
     private void OnValidate()
@@ -104,7 +104,7 @@ public class FieldGenerator : MonoBehaviour
 
                 newTile.name = $"{_tilePrefab.name} ({x}:{y})";
                 newTile.localScale = (1 - _outlinePercent) * _tileSize * Vector3.one;
-                newTile.parent = parent;
+                newTile.SetParent(parent, false);
                 _tileMap[x, y] = newTile;
             }
         }
@@ -121,6 +121,8 @@ public class FieldGenerator : MonoBehaviour
             Sheaf sheaf = CreateSheaf(generatedFieldHolder, random);
             sheaf.OnDestroyed += () =>
             {
+                float randomHeight = GetRandomHeight(random);
+                sheaf.Grow(randomHeight, _growthDelay);
             };
             _sheaves.Add(sheaf);
         }
