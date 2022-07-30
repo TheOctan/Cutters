@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using OctanGames.Extensions;
 using UnityEngine;
 using Random = System.Random;
@@ -9,21 +10,25 @@ public class FieldGenerator : MonoBehaviour
 
     [Header("Prefabs")]
     [SerializeField] private Transform _tilePrefab;
-    [SerializeField] private Transform _sheafPrefab;
+    [SerializeField] private Sheaf _sheafPrefab;
 
     [Header("Properties")]
     [SerializeField] private Vector2Int _mapSize;
     [SerializeField] private int _seed;
     [SerializeField, Min(0)] private float _minObstacleHeight;
     [SerializeField, Min(0)] private float _maxObstacleHeight;
+    [SerializeField, Min(0.1f)] private float _growthDelay = 10f;
     [SerializeField, Range(0, 1)] private float _growthPercent;
     [SerializeField, Range(0, 1)] private float _outlinePercent = 0.04f;
     [SerializeField] private float _tileSize = 1.57f;
 
-    private List<Vector2Int> _allTileCoordinates;
+    private readonly List<Vector2Int> _allTileCoordinates = new List<Vector2Int>();
     private Queue<Vector2Int> _shuffledTileCoordinates;
     private Transform[,] _tileMap;
+    private readonly List<Sheaf> _sheaves = new List<Sheaf>();
 
+    public int CountSheaves => _sheaves.Count;
+    public int GrowedSheaves => _sheaves.Count(s => !s.IsDestroyed);
     private Vector2Int MapCenter => new Vector2Int(_mapSize.x / 2, _mapSize.y / 2);
 
     private void OnValidate()
@@ -38,6 +43,20 @@ public class FieldGenerator : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        GenerateField();
+        AnimateFieldGrow();
+    }
+
+    private void AnimateFieldGrow()
+    {
+        for (var i = 0; i < _sheaves.Count; i++)
+        {
+            _sheaves[i].Grow(1f + 0.1f * i);
+        }
+    }
+
     public void GenerateField()
     {
         InitCoordinates();
@@ -49,7 +68,7 @@ public class FieldGenerator : MonoBehaviour
 
     private void InitCoordinates()
     {
-        _allTileCoordinates = new List<Vector2Int>();
+        _allTileCoordinates.Clear();
         for (var x = 0; x < _mapSize.x; x++)
         {
             for (var y = 0; y < _mapSize.y; y++)
@@ -63,13 +82,13 @@ public class FieldGenerator : MonoBehaviour
     private Transform GeneratedFieldHolder()
     {
         Transform childTransform = transform.GetChild(0);
-        if (childTransform != null)
+        if (!ReferenceEquals(childTransform, null))
         {
             DestroyImmediate(childTransform.gameObject);
         }
 
         Transform generatedFieldHolder = new GameObject(HOLDER_NAME).transform;
-        generatedFieldHolder.SetParent(transform);
+        generatedFieldHolder.SetParent(transform, false);
         return generatedFieldHolder;
     }
 
@@ -96,33 +115,50 @@ public class FieldGenerator : MonoBehaviour
         var random = new Random(_seed);
         var sheafCount = (int)(_mapSize.x * _mapSize.y * _growthPercent);
 
+        _sheaves.Clear();
         for (var i = 0; i < sheafCount; i++)
         {
-            float sheafHeight = Mathf.Lerp(_minObstacleHeight, _maxObstacleHeight, (float)random.NextDouble());
-            CreateSheaf(generatedFieldHolder, sheafHeight);
+            Sheaf sheaf = CreateSheaf(generatedFieldHolder, random);
+            sheaf.OnDestroyed += () =>
+            {
+            };
+            _sheaves.Add(sheaf);
         }
     }
 
-    private void CreateSheaf(Transform generatedFieldHolder, float obstacleHeight)
+    private Sheaf CreateSheaf(Transform generatedFieldHolder, Random random)
     {
         Vector2Int randomCoord = GetRandomCoord();
-        Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
 
-        Transform newSheaf = Instantiate(_sheafPrefab,
-            obstaclePosition + obstacleHeight * 0.5f * Vector3.up,
-            Quaternion.identity);
+        Vector3 position = CoordToPosition(randomCoord.x, randomCoord.y);
+        float randomHeight = GetRandomHeight(random);
+        Vector3 positionCorrectedByHeight = position + randomHeight * 0.5f * Vector3.up;
 
+        Sheaf newSheaf = Instantiate(_sheafPrefab, positionCorrectedByHeight, Quaternion.identity);
         newSheaf.name = $"{_sheafPrefab.name} ({randomCoord.x}:{randomCoord.y})";
-        newSheaf.parent = generatedFieldHolder;
-        newSheaf.localScale = new Vector3((1 - _outlinePercent) * _tileSize, obstacleHeight,
-            (1 - _outlinePercent) * _tileSize);
+        Transform sheafTransform = newSheaf.transform;
+        sheafTransform.SetParent(generatedFieldHolder, false);
+        sheafTransform.localScale = GetTargetScale(randomHeight);
+
+        return newSheaf;
+    }
+
+    private float GetRandomHeight(Random random)
+    {
+        return Mathf.Lerp(_minObstacleHeight, _maxObstacleHeight, (float)random.NextDouble());
+    }
+
+    private Vector3 GetTargetScale(float obstacleHeight)
+    {
+        float outlinedSize = (1 - _outlinePercent) * _tileSize;
+        return new Vector3(outlinedSize, obstacleHeight, outlinedSize);
     }
 
     private Vector3 CoordToPosition(int x, int y)
     {
         float xPosition = -_mapSize.x * 0.5f + 0.5f + x;
         float yPosition = -_mapSize.y * 0.5f + 0.5f + y;
-        return new Vector3(xPosition, transform.position.y, yPosition) * _tileSize;
+        return new Vector3(xPosition, 0, yPosition) * _tileSize;
     }
 
     public Transform GetTileFromPosition(Vector3 position)

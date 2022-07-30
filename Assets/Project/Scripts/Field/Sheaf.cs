@@ -1,12 +1,21 @@
+using System;
+using System.Threading.Tasks;
+using DG.Tweening;
 using EzySlice;
 using UnityEngine;
 
 public class Sheaf : MonoBehaviour, IDestroyable
 {
-    [SerializeField] private Collider _collider;
+    public event Action OnDestroyed;
+
     [SerializeField] private Renderer _renderer;
+    [Header("Properties")]
+    [SerializeField] private float _growDuration = 0.3f;
 
     private Material _material;
+    private GameObject _base;
+
+    public bool IsDestroyed { get; private set; }
 
     private void Awake()
     {
@@ -15,19 +24,66 @@ public class Sheaf : MonoBehaviour, IDestroyable
 
     public void Grow()
     {
-        
+        GrowAnimate(transform.localScale.y, 0f);
     }
+
+    public void Grow(float delay)
+    {
+        GrowAnimate(transform.localScale.y, delay);
+    }
+
+    public void Grow(float newHeight, float delay)
+    {
+        GrowAnimate(newHeight, delay);
+    }
+
+    private async void GrowAnimate(float newHeight, float delay)
+    {
+        gameObject.SetActive(true);
+        Vector3 originalScale = transform.localScale;
+        transform.localScale = Vector3.zero;
+
+        await Task.Delay((int)(1000 * delay));
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(transform.DOScale(originalScale, _growDuration))
+            .Append(
+                transform.DOShakeScale(0.2f, 
+                    (Vector3.forward + Vector3.right) * 0.2f,
+                    1, 0))
+            .OnComplete(() =>
+            {
+                Destroy(_base);
+                transform.localScale = originalScale;
+                IsDestroyed = false;
+            });
+    }
+
 
     public void Destroy()
     {
+        if (IsDestroyed)
+        {
+            return;
+        }
+        IsDestroyed = true;
+
         // TODO: confuse with global positions
         GameObject[] gameObjects = Slice(GetSlicePosition(), Vector3.up);
-
-        gameObjects[1].transform.parent = transform.parent;
         CreateStackableSheaf(gameObjects[0]);
+        InitBase(gameObjects[1]);
 
-        _collider.enabled = false;
         gameObject.SetActive(false);
+
+        OnDestroyed?.Invoke();
+
+        Grow(5f);
+    }
+
+    private void InitBase(GameObject obj)
+    {
+        _base = obj;
+        _base.transform.parent = transform.parent;
     }
 
     private static void CreateStackableSheaf(GameObject gameObject)
