@@ -12,6 +12,9 @@ public class Inventory : MonoBehaviour, IInventory
     [SerializeField] private int _countColumns = 2;
     [SerializeField] private float _stackWidth = 0.5f;
     [SerializeField] private float _stackHeight = 1f;
+    [Header("Animation")]
+    [SerializeField] private float _shakeDuration = 0.1f;
+    [SerializeField] private float _shakeStrength = 0.2f;
 
     private readonly Stack<Transform> _items = new Stack<Transform>();
 
@@ -47,8 +50,10 @@ public class Inventory : MonoBehaviour, IInventory
 
     private void UpdateCapacityText()
     {
-        _capacityText.transform.DOShakeScale(0.3f, 0.3f);
-        _capacityText.text = $"{CountItems} / {_capacity}";
+        _capacityText.transform
+            .DOShakeScale(_shakeDuration, _shakeStrength, 1, 0)
+            .OnStart(() => _capacityText.text = $"{CountItems} / {_capacity}")
+            .OnComplete(() => _capacityText.transform.localScale = Vector3.one);
     }
 
     private Vector3 GetNextPositionInStack()

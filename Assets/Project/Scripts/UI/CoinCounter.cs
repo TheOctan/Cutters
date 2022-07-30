@@ -1,18 +1,28 @@
-using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CoinCounter : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _coinCountText;
     [SerializeField] private Transform _coinHolder;
+    [SerializeField] private Transform _coin;
+    [SerializeField] private Camera _uiCamera;
 
+    [Header("Properties")]
     [SerializeField] private float _shakeDuration = 0.1f;
     [SerializeField] private float _shakeStrength = 0.2f;
 
     private int _currentCoinsCount;
+
+    private void Awake()
+    {
+        // if (!ReferenceEquals(_uiCamera, null))
+        // {
+        //     Vector3 local = _uiCamera.ScreenToWorldPoint(_coinHolder.position);
+        //     _coin.position = new Vector3(local.x, local.y, _coin.transform.position.z);
+        // }
+    }
 
     public void AddCoins(int count)
     {
