@@ -7972,6 +7972,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 407764430}
     m_Modifications:
+    - target: {fileID: 771071171685237489, guid: b17e3b5f36dc08c469807621a0273c63,
+        type: 3}
+      propertyPath: _castRadius
+      value: 0.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 771071171685237489, guid: b17e3b5f36dc08c469807621a0273c63,
+        type: 3}
+      propertyPath: _castDistance
+      value: 0.67
+      objectReference: {fileID: 0}
     - target: {fileID: 2149050004826860352, guid: b17e3b5f36dc08c469807621a0273c63,
         type: 3}
       propertyPath: m_LocalRotation.w
