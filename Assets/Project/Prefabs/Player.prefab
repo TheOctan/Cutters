@@ -1596,7 +1596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fa83b5c4a34d9da8a345f136e1ea3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _castRadius: 1.3
+  _castDistance: 1
+  _castRadius: 0.66
   _castHeight: 0.5
   _layerMask:
     serializedVersion: 2
@@ -2178,6 +2179,8 @@ MonoBehaviour:
   _countColumns: 2
   _stackWidth: 0.25
   _stackHeight: 0.5
+  _shakeDuration: 0.1
+  _shakeStrength: 0.2
 --- !u!65 &4611236698478077444
 BoxCollider:
   m_ObjectHideFlags: 0
