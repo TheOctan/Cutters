@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorController : MonoBehaviour
@@ -31,7 +33,7 @@ public class DoorController : MonoBehaviour
     private bool IsDoorOpen => CurrentState == DoorState.Open;
     private bool IsDoorClosed => CurrentState == DoorState.Closed;
 
-    private void Awake()
+    private void Start()
     {
         _animator = GetComponent<Animation>();
         if (_animator == null)
@@ -46,10 +48,7 @@ public class DoorController : MonoBehaviour
         _closeAnimation.legacy = true;
         _animator.AddClip(_openAnimation, DoorState.Open.ToString());
         _animator.AddClip(_closeAnimation, DoorState.Closed.ToString());
-    }
 
-    private void Start()
-    {
         _currentState = _initialState;
         string clip = GetCurrentAnimation();
         _animator[clip].speed = 9999;
