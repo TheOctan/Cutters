@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d2f24bfdb0a758e41813bbc7ae4f978f, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.0859596, g: 0.13642517, b: 0.32298547, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7982,6 +7982,16 @@ PrefabInstance:
       propertyPath: m_LocalRotation.x
       value: 0.40672377
       objectReference: {fileID: 0}
+    - target: {fileID: 2149050004826860352, guid: b17e3b5f36dc08c469807621a0273c63,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2149050004826860352, guid: b17e3b5f36dc08c469807621a0273c63,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 3553889315090612940, guid: b17e3b5f36dc08c469807621a0273c63,
         type: 3}
       propertyPath: m_RootOrder
@@ -8320,26 +8330,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7267826970648913633, guid: 183540e3e26427d438b56e0ee0209e6e,
-        type: 3}
-      propertyPath: m_Lightmapping
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7267826970648913633, guid: 183540e3e26427d438b56e0ee0209e6e,
-        type: 3}
-      propertyPath: m_Shadows.m_Type
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7267826970648913633, guid: 183540e3e26427d438b56e0ee0209e6e,
-        type: 3}
-      propertyPath: m_Shadows.m_Strength
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7267826970648913633, guid: 183540e3e26427d438b56e0ee0209e6e,
-        type: 3}
-      propertyPath: m_Shadows.m_Resolution
-      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7267826970648913634, guid: 183540e3e26427d438b56e0ee0209e6e,
         type: 3}
