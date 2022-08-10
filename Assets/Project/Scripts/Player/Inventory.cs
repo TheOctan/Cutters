@@ -60,8 +60,8 @@ public class Inventory : MonoBehaviour, IInventory
     {
         int columnCapacity = _capacity / _countColumns;
 
-        int xIndex = (CountItems - 1) / columnCapacity;
-        int yIndex = (CountItems - 1) % columnCapacity;
+        int xIndex = CountItems / columnCapacity;
+        int yIndex = CountItems % columnCapacity;
 
         float horizontalOffset = _stackWidth / _countColumns;
         float verticalOffset = _stackHeight / columnCapacity;
