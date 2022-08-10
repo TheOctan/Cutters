@@ -2,8 +2,8 @@
 {
     public abstract class BasePlayerState
     {
-        protected PlayerMovementContext MovementContext;
-        protected PlayerAnimationContext AnimationContext;
+        protected readonly PlayerMovementContext MovementContext;
+        protected readonly PlayerAnimationContext AnimationContext;
 
         private readonly PlayerStateMachine _stateMachine;
 
